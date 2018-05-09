@@ -12,10 +12,19 @@ class Holiday_(Holiday):
                 ResourceUpdate([(HAPPINESS, -1)]))
             ], tags)
 
+def get_legislation_distribution():
+    return {
+        "Repeal.": 5,
+        "*": 3,
+        "Sharia Laws.": 2,
+        "Papal Primacy.": 2,
+        "Sustainable Energy Hub.": 2,
+        "Knoxville Stock Exchange.": 2,
+    }
 
 def get_legislation_cards():
     return [
-        Building (
+        Building(
             "Build a Wall.",
             "",
             ResourceUpdate([(ECONOMY, -1), (INFRASTRUCTURE, +1)])
@@ -84,7 +93,7 @@ def get_legislation_cards():
         Legislation(
             "Cut Transportation Budget.",
             "",
-            WhenPresent([(ENVIRONMENT, 1), (ECONOMY, 1), (INFRASTRUCTURE, -1)])
+            WhenPresent([(ECONOMY, 1), (INFRASTRUCTURE, -1)])
         ),
         Legislation(
             "Promote Local Businesses.",
@@ -179,7 +188,7 @@ def get_legislation_cards():
             tags=['Business']
         ),
         Legislation(
-            "Repeal",
+            "Repeal.",
             "",
             SelectLegislation(Repeal())
         ),
@@ -195,6 +204,16 @@ def get_legislation_cards():
                 ResourceUpdate([(ENVIRONMENT, -2)]),
                 WhenPresent([(ECONOMY, 3)])
             ]
+        ),
+        Legislation(
+           "Burn the Forest." ,
+           "",
+           ResourceUpdate([(ENVIRONMENT, -1), (ECONOMY, +1)])
+        ),
+        Legislation(
+            "Mandatory Overtime.",
+            "",
+            WhenPresent([(ECONOMY, 1), (HAPPINESS, -1)])
         )
     ]
 
@@ -285,10 +304,7 @@ def get_event_cards():
             "Earth day.", "", Resource([(ENVIRONMENT, '>=', 7)])
         ),
         Holiday_(
-            "Easter.", "", Enacted('Build a Church.')
-        ),
-        Holiday_(
-            "Eid-al-Fitr.", "", Enacted('Build a Mosque.')
+            "New Year.", "", Enacted('Build a Church.') | Enacted('Build a Mosque.')
         ),
         Holiday_(
             "Free burgers for everyone.", "", ~Enacted('Global Veganism.')
@@ -297,7 +313,7 @@ def get_event_cards():
             'Wrath of God.',
             '',
             If (~(Enacted('Sharia Laws.') & Enacted('Papal Primacy.')), 
-                SetResource([(INFRASTRUCTURE, 2), (ECONOMY, 2), (HAPPINESS, 2)]))
+                SetResource([(ENVIRONMENT, 2), (INFRASTRUCTURE, 2), (ECONOMY, 2), (HAPPINESS, 2)]))
         ),
         Event(
             'Reset',
@@ -311,8 +327,66 @@ def get_event_cards():
             'Forest Fire',
             '',
             If(Enacted('Build a Fire Station.'),
+                ResourceUpdate([(ENVIRONMENT, -1), (INFRASTRUCTURE, -1)]),
+                ResourceUpdate([(ENVIRONMENT, -2), (ECONOMY, -1), (INFRASTRUCTURE, -1), (HAPPINESS, -1)]))
+        ),
+        Disaster(
+            'Building Collapsed.',
+            '',
+            If(Enacted('Building Codes.'),
+                ResourceUpdate([(INFRASTRUCTURE, -1)]),
+                ResourceUpdate([(INFRASTRUCTURE, -2)])
+            )
+        ),
+        Event(
+            'Terrorist Attack on Subway.',
+            '',
+            ResourceUpdate([(INFRASTRUCTURE, -1), (HAPPINESS, -1)])
+        ),
+        Event(
+            'Company Bankrupted.', '',
+            [
+                ForEach(Repeal(), tag='Business'),
+                ResourceUpdate([(ECONOMY, -2)])
+            ]
+        ),
+        Event(
+            'Free Trees.',
+            '',
+            ResourceUpdate([(ENVIRONMENT, 1)])
+        ),
+        Event(
+            'Free Roads.',
+            '',
+            ResourceUpdate([(INFRASTRUCTURE, 1)])
+        ),
+        Event(
+            'Free Money.',
+            '',
+            ResourceUpdate([(ECONOMY, 1)])
+        ),
+        Event(
+            'Free Hugs.',
+            '',
+            ResourceUpdate([(HAPPINESS, 1)])
+        ),
+        Event(
+            'Building Catches Fire.', '',
+            If(Enacted('Build a Fire Station.'),
                 ResourceUpdate([(ENVIRONMENT, -1)]),
-                ResourceUpdate([(ENVIRONMENT, -1), (ECONOMY, -1), (INFRASTRUCTURE, -1), (HAPPINESS, -1)]))
+                ResourceUpdate([(ENVIRONMENT, -1), (INFRASTRUCTURE, -1)]))
+        ),
+        Event(
+            'Factory was caught polluting the river.', '',
+            ForEach(ResourceUpdate([(ENVIRONMENT, -1)]), tag='Business')
+        ),
+        Event(
+            'Purple Haze.', '',
+            ResourceUpdate([(ENVIRONMENT, -1)])
+        ),
+        Event(
+            'Hole in Ozone Layer.', '',
+            ResourceUpdate([(ENVIRONMENT, -2)])
         )
     ]
 '''

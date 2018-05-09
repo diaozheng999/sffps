@@ -30,7 +30,7 @@ class Resources(object):
             self.resources[resource] += delta
             if self.resources[resource] > self.max_val:
                 self.resources[resource] = self.max_val
-            if self.resources[resource] == self.min_val:
+            if self.resources[resource] <= self.min_val:
                 self.game_manager.game_over()
 
     def set_value(self, resource_values):
@@ -38,7 +38,7 @@ class Resources(object):
             self.resources[resource] = value
             if self.resources[resource] > self.max_val:
                 self.resources[resource] = self.max_val
-            if self.resources[resource] == self.min_val:
+            if self.resources[resource] <= self.min_val:
                 self.game_manager.game_over()
 
     def repr_values(self, vals, positive=True):

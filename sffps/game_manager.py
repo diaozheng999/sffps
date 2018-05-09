@@ -57,6 +57,9 @@ class GameManager(object):
         for trigger in self.get_legislation_repealed_trigger(card):
             trigger.invoke()
 
+    def draw():
+        pass
+
     def enact(self, card):
         if self.block_all_legislations:
             return
@@ -88,18 +91,14 @@ class GameManager(object):
         while(len(self.event_deck) < self.n_rounds):
             self.event_deck += events
             n_event_dups += 1
-
-        n_legislation_dups = 0
-        while(len(self.legislation_deck) < self.n_players * self.n_rounds * self.n_hand_size):    
-            self.legislation_deck += legislations
-            n_legislation_dups += 1
+  
+        self.legislation_deck += legislations
 
 
-        print "GameManager: Set %d event card(s) (duplicated %d time(s)), %d legislation card(s) (duplicated %d time(s))."%(
+        print "GameManager: Set %d event card(s) (duplicated %d time(s)), %d legislation card(s)."%(
             len(events),
             n_event_dups,
-            len(legislations),
-            n_legislation_dups)
+            len(legislations))
 
         print "GameManager: Shuffling and distributing cards..."    
         random.shuffle(self.event_deck)
